@@ -36,11 +36,11 @@ function Brand() {
 export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-neutral-200 bg-white/95 backdrop-blur">
-      <div className="mx-auto flex h-20 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-7xl items-center gap-5 px-4 sm:px-6 lg:h-24 lg:px-8">
         <Brand />
 
         <nav aria-label="Primary navigation" className="ml-auto hidden xl:block">
-          <ul className="flex items-center gap-6">
+          <ul className="flex items-center gap-5 2xl:gap-7">
             {navigation.map(({ href, label }) => (
               <li key={href}>
                 <Link
@@ -54,7 +54,7 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="ml-auto hidden items-center gap-4 md:flex xl:ml-2">
+        <div className="ml-auto hidden items-center gap-3 md:flex xl:ml-3">
           <Link
             className="flex items-center gap-2 text-sm font-semibold text-neutral-700 transition-colors hover:text-amber-700"
             href="/login"
@@ -63,7 +63,7 @@ export function Header() {
             Customer Login
           </Link>
           <Link
-            className="inline-flex h-11 items-center gap-2 bg-neutral-950 px-5 text-sm font-semibold text-white transition-colors hover:bg-amber-500 hover:text-neutral-950"
+            className="inline-flex h-11 items-center gap-2 bg-neutral-950 px-4 text-sm font-semibold text-white transition-colors hover:bg-amber-500 hover:text-neutral-950 2xl:px-5"
             href="/contact#quote"
           >
             Request a Quote

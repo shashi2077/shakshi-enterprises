@@ -1,6 +1,8 @@
+import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { TopBar } from "@/components/layout/top-bar";
 import { CatalogueCta } from "@/components/sections/catalogue-cta";
+import { FinalEnquiryCta } from "@/components/sections/final-enquiry-cta";
 import { HeroSection } from "@/components/sections/hero-section";
 import { IndustriesServed } from "@/components/sections/industries-served";
 import { ProductCategories } from "@/components/sections/product-categories";
@@ -18,7 +20,9 @@ export default function Home() {
         <WhyChooseUs />
         <IndustriesServed />
         <CatalogueCta />
+        <FinalEnquiryCta />
       </main>
+      <Footer />
       <FloatingContactActions />
     </>
   );
