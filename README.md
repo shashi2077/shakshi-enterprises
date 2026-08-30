@@ -61,3 +61,27 @@ Supabase → server query layer → row mapper → Product model → existing pr
 ```
 
 Future admin CRUD will require authenticated role checks and separate write policies. Do not add broad authenticated write access or use a service-role key in client components.
+
+## Admin authentication
+
+Supabase Auth owns passwords and sessions. The application never stores passwords in the public schema. After email/password authentication, the server reads the signed-in user's `profiles` row and allows `/admin` only when `role = 'admin'` and `active = true`. The protected layout repeats this authorization server-side on every admin render; client UI is not treated as an authorization boundary.
+
+The `profiles` table is linked one-to-one to `auth.users`. A database trigger creates every new profile with the constrained `customer` role. Supported roles are `admin` and `customer`. Authenticated users may select only their own profile and may update only the `full_name` column. Table privileges prevent them from changing `role`, `active`, or identity fields, and there are no public insert or delete policies.
+
+Session cookies are refreshed by `src/proxy.ts` for admin routes. Login is available at `/admin/login`; unauthenticated, inactive, and non-admin accounts cannot enter `/admin`. Logout invalidates the Supabase session and returns to the login page.
+
+### Create the first administrator safely
+
+1. Apply migrations before creating users: `supabase db push`.
+2. In Supabase Dashboard → Authentication → Users, create the administrator's email/password account. Do not expose a public sign-up path for administrators.
+3. From the Supabase SQL Editor while authenticated as the project owner, run the following after replacing the email:
+
+```sql
+update public.profiles
+set role = 'admin', active = true
+where id = (select id from auth.users where email = 'admin@example.com');
+```
+
+4. Confirm exactly one intended row changed, then sign in at `/admin/login`.
+
+Do not accept a role from registration metadata, forms, URL parameters, or browser code. Later role-management functionality must run through narrowly scoped, audited server/database logic. The public publishable key remains the only key used by the application today. A service-role key is not required for login or authorization; if a future server-only workflow needs one, store it only in the deployment secret manager and never use a `NEXT_PUBLIC_` prefix.
