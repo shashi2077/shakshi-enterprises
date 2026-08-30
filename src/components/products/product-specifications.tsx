@@ -1,0 +1,3 @@
+import type { ProductSpecification } from "@/types/product";
+
+export function ProductSpecifications({ specifications }: { specifications: ProductSpecification[] }) { if (!specifications.length) return null; return <section><h2 className="text-2xl font-semibold tracking-tight">Technical Specifications</h2><dl className="mt-5 overflow-hidden border border-neutral-200">{specifications.map((item, index) => <div className={`grid gap-1 px-5 py-4 sm:grid-cols-[14rem_1fr] ${index % 2 ? "bg-neutral-50" : "bg-white"}`} key={item.label}><dt className="text-sm font-semibold text-neutral-800">{item.label}</dt><dd className="text-sm leading-6 text-neutral-600">{item.value}</dd></div>)}</dl></section>; }

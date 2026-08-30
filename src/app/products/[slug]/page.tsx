@@ -1,0 +1,24 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ChevronRight } from "lucide-react";
+import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import { TopBar } from "@/components/layout/top-bar";
+import { ProductEnquiryActions } from "@/components/products/product-enquiry-actions";
+import { ProductGallery } from "@/components/products/product-gallery";
+import { ProductGrid } from "@/components/products/product-grid";
+import { ProductSizes } from "@/components/products/product-sizes";
+import { ProductSpecifications } from "@/components/products/product-specifications";
+import { activeProducts, getProductBySlug, getRelatedProducts } from "@/data/products";
+
+type Props = { params: Promise<{ slug: string }> };
+export function generateStaticParams() { return activeProducts.map(({ slug }) => ({ slug })); }
+export async function generateMetadata({ params }: Props): Promise<Metadata> { const product = getProductBySlug((await params).slug); if (!product) return { title: "Product Not Found" }; return { title: product.name, description: `${product.shortDescription} Explore ${product.category.toLowerCase()} and request a quotation from Shakshi Enterprises.` }; }
+
+function ListSection({ title, items }: { title: string; items?: string[] }) { if (!items?.length) return null; return <section><h2 className="text-2xl font-semibold tracking-tight">{title}</h2><ul className="mt-5 grid gap-3 sm:grid-cols-2">{items.map((item) => <li className="flex gap-3 border border-neutral-200 bg-neutral-50 p-4 text-sm leading-6 text-neutral-700" key={item}><span aria-hidden="true" className="mt-2 size-1.5 shrink-0 bg-amber-500" />{item}</li>)}</ul></section>; }
+
+export default async function ProductDetailPage({ params }: Props) {
+  const product = getProductBySlug((await params).slug); if (!product) notFound(); const related = getRelatedProducts(product);
+  return <><TopBar /><Header /><main className="bg-white"><div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"><nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-2 text-sm text-neutral-500"><Link href="/">Home</Link><ChevronRight aria-hidden="true" className="size-4" /><Link href="/products">Products</Link><ChevronRight aria-hidden="true" className="size-4" /><span className="text-neutral-900">{product.name}</span></nav></div><section className="mx-auto grid max-w-7xl gap-10 px-4 pb-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:pb-24"><ProductGallery product={product} /><div className="self-center"><p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-700">{product.category}</p><h1 className="mt-4 text-4xl font-semibold tracking-[-0.04em] text-neutral-950 sm:text-5xl">{product.name}</h1><p className="mt-5 text-lg leading-8 text-neutral-600">{product.shortDescription}</p><div className="mt-8"><ProductEnquiryActions productName={product.name} productSlug={product.slug} /></div><p className="mt-5 text-xs text-neutral-500">No prices are displayed. Specifications and quotation are confirmed against your requirement.</p></div></section><section className="border-y border-neutral-200 bg-neutral-50"><div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.2fr_0.8fr] lg:px-8 lg:py-24"><div className="space-y-12"><section><h2 className="text-2xl font-semibold tracking-tight">Product Overview</h2><p className="mt-5 leading-7 text-neutral-600">{product.description}</p></section><ListSection title="Key Features" items={product.features} /><ListSection title="Advantages" items={product.advantages} /><ListSection title="Applications" items={product.applications} /></div><div className="space-y-12"><ProductSpecifications specifications={product.specifications} /><ProductSizes sizes={product.sizes} /><ListSection title="Accessories" items={product.accessories} /><ListSection title="Customization Options" items={product.customizationOptions} /></div></div></section>{related.length > 0 && <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24"><h2 className="text-3xl font-semibold tracking-tight">Related Products</h2><div className="mt-8"><ProductGrid products={related} /></div></section>}<section className="bg-neutral-950 px-4 py-14 text-white sm:px-6 lg:px-8"><div className="mx-auto max-w-7xl"><h2 className="max-w-2xl text-3xl font-semibold tracking-tight sm:text-4xl">Discuss this product with our team.</h2><p className="mt-4 max-w-xl text-neutral-300">Share your size, quantity, and application so the product configuration can be reviewed.</p><div className="mt-8"><ProductEnquiryActions productName={product.name} productSlug={product.slug} /></div></div></section></main><Footer /></>;
+}

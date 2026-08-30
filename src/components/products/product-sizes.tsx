@@ -1,0 +1,3 @@
+import type { ProductSize } from "@/types/product";
+
+export function ProductSizes({ sizes }: { sizes: ProductSize[] }) { if (!sizes.length) return null; return <section><h2 className="text-2xl font-semibold tracking-tight">Available Sizes</h2><div className="mt-5 grid gap-3 sm:grid-cols-2">{sizes.map((size) => <div className="border border-neutral-200 bg-neutral-50 p-5" key={size.label}><h3 className="font-semibold">{size.label}</h3><p className="mt-2 text-sm text-neutral-600">{size.notes ?? [size.height, size.width, size.depth].filter(Boolean).join(" × ")} {size.unit}</p></div>)}</div></section>; }
