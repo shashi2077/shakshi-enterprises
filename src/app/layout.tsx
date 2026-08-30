@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: { default: "Shakshi Enterprises", template: "%s | Shakshi Enterprises" },
-  description: "Shakshi Enterprises",
+  description:
+    "Industrial and commercial storage solutions designed around your business operations.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
